@@ -1,45 +1,31 @@
-import {
-  forEach
-} from 'min-dash';
+import { forEach } from "min-dash";
 
-import {
-  getBusinessObject
-} from 'bpmn-js/lib/util/ModelUtil';
+import { getBusinessObject } from "bpmn-js/lib/util/ModelUtil";
 
-import {
-  useEffect,
-  useState
-} from '@bpmn-io/properties-panel/preact/hooks';
+import { useEffect, useState } from "@bpmn-io/properties-panel/preact/hooks";
 
 import {
   SelectEntry,
   isSelectEntryEdited,
   TextFieldEntry,
-  isTextFieldEntryEdited
-} from '@bpmn-io/properties-panel';
+  isTextFieldEntryEdited,
+} from "@bpmn-io/properties-panel";
 
-import {
-  useService
-} from 'bpmn-js-properties-panel';
+import { useService } from "bpmn-js-properties-panel";
 
-import {
-  fetchOptions
-} from '../../service';
+import { fetchOptions } from "../../service";
 
 import {
   createElement,
   getImplementationDefinition,
   getImplementationType,
-  isSupported
-} from '../util';
+  isSupported,
+} from "../util";
 
-const EMPTY_OPTION = '';
-
+const EMPTY_OPTION = "";
 
 export function SelectImplementationProps(props) {
-  const {
-    element
-  } = props;
+  const { element } = props;
 
   if (!isSupported(element)) {
     return [];
@@ -47,17 +33,17 @@ export function SelectImplementationProps(props) {
 
   const entries = [
     {
-      id: 'async-type',
+      id: "async-type",
       component: Type,
-      isEdited: isSelectEntryEdited
-    }
+      isEdited: isSelectEntryEdited,
+    },
   ];
 
   if (getImplementationType(element)) {
     entries.push({
-      id: 'async-connection',
+      id: "async-connection",
       component: ConnectionKey,
-      isEdited: isTextFieldEntryEdited
+      isEdited: isTextFieldEntryEdited,
     });
   }
 
@@ -67,11 +53,11 @@ export function SelectImplementationProps(props) {
 function Type(props) {
   const { element } = props;
 
-  const bpmnFactory = useService('bpmnFactory');
-  const commandStack = useService('commandStack');
-  const translate = useService('translate');
+  const bpmnFactory = useService("bpmnFactory");
+  const commandStack = useService("commandStack");
+  const translate = useService("translate");
 
-  const [ fetchedOptions, setFetchedOptions ] = useState([]);
+  const [fetchedOptions, setFetchedOptions] = useState([]);
 
   // retrieve our available options via async service call
   useEffect(async () => {
@@ -92,23 +78,23 @@ function Type(props) {
     const businessObject = getBusinessObject(element);
 
     // (1) ensure extension elements
-    let extensionElements = businessObject.get('extensionElements');
+    let extensionElements = businessObject.get("extensionElements");
 
     if (!extensionElements) {
       extensionElements = createElement(
-        'bpmn:ExtensionElements',
+        "bpmn:ExtensionElements",
         { values: [] },
         businessObject,
         bpmnFactory
       );
 
       commands.push({
-        cmd: 'element.updateModdleProperties',
+        cmd: "element.updateModdleProperties",
         context: {
           element: element,
           moddleElement: businessObject,
-          properties: { extensionElements }
-        }
+          properties: { extensionElements },
+        },
       });
     }
 
@@ -117,45 +103,45 @@ function Type(props) {
 
     if (!implementationDefinition) {
       implementationDefinition = createElement(
-        'async:ImplementationDefinition',
-        { },
+        "async:ImplementationDefinition",
+        {},
         businessObject,
         bpmnFactory
       );
 
       commands.push({
-        cmd: 'element.updateModdleProperties',
+        cmd: "element.updateModdleProperties",
         context: {
           element: element,
           moddleElement: extensionElements,
           properties: [
             {
-              values: extensionElements.get('values').push(implementationDefinition)
-            }
-          ]
-        }
+              values: extensionElements
+                .get("values")
+                .push(implementationDefinition),
+            },
+          ],
+        },
       });
     }
 
     // (3) set implementation type
     commands.push({
-      cmd: 'element.updateModdleProperties',
+      cmd: "element.updateModdleProperties",
       context: {
         element: element,
         moddleElement: implementationDefinition,
-        properties: { type: value }
-      }
+        properties: { type: value },
+      },
     });
 
     // (4) commit all updates
-    commandStack.execute('properties-panel.multi-command-executor', commands);
+    commandStack.execute("properties-panel.multi-command-executor", commands);
   };
 
   // display the fetched options in the select component
   const getOptions = (element) => {
-    const options = [
-      { value: EMPTY_OPTION, label: translate('<none>') }
-    ];
+    const options = [{ value: EMPTY_OPTION, label: translate("<none>") }];
 
     forEach(fetchedOptions, (o) => {
       options.push({ value: o.key, label: translate(o.name) });
@@ -166,44 +152,40 @@ function Type(props) {
 
   return SelectEntry({
     element,
-    id: 'async-type',
-    label: translate('Type'),
+    id: "async-type",
+    label: translate("Type"),
     getValue,
     setValue,
-    getOptions
+    getOptions,
   });
 }
 
 function ConnectionKey(props) {
   const { element } = props;
 
-  const modeling = useService('modeling');
-  const translate = useService('translate');
-  const debounce = useService('debounceInput');
+  const modeling = useService("modeling");
+  const translate = useService("translate");
+  const debounce = useService("debounceInput");
 
   const definition = getImplementationDefinition(element);
 
   const getValue = () => {
-    return definition.get('connectionKey');
+    return definition.get("connectionKey");
   };
 
   // initiate simple diagram updates via `modeling.updateModdleProperties`
   const setValue = (value) => {
-    return modeling.updateModdleProperties(
-      element,
-      definition,
-      {
-        connectionKey: value
-      }
-    );
+    return modeling.updateModdleProperties(element, definition, {
+      connectionKey: value,
+    });
   };
 
   return TextFieldEntry({
     element,
-    id: 'async-connection',
-    label: translate('Connection key'),
+    id: "async-connection",
+    label: translate("Connection key"),
     getValue,
     setValue,
-    debounce
+    debounce,
   });
 }
