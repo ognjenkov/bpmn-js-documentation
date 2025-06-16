@@ -1,41 +1,34 @@
-import { SelectImplementationProps } from './properties/SelectImplementationProps';
+import { SelectImplementationProps } from "./properties/SelectImplementationProps";
 
-import { Group } from '@bpmn-io/properties-panel';
+import { Group } from "@bpmn-io/properties-panel";
 
 const LOW_PRIORITY = 500;
 
-
 export default class AsyncPropertiesProvider {
-
   constructor(propertiesPanel, translate) {
-
     propertiesPanel.registerProvider(LOW_PRIORITY, this);
 
     this._translate = translate;
+    console.log("propertiesPanel", propertiesPanel._getProviders());
   }
 
   getGroups(element) {
     return (groups) => {
-
       // add groups
-      groups = groups.concat([
-        SelectImplementationGroup(element)
-      ]);
+      groups = groups.concat([SelectImplementationGroup(element)]);
 
       // contract: if a group returns null, it should not be displayed at all
-      return groups.filter(group => group !== null);
+      return groups.filter((group) => group !== null);
     };
   }
 }
 
 function SelectImplementationGroup(element) {
   const group = {
-    label: 'Select implementation',
-    id: 'Async_SelectImplementation',
+    label: "Select implementation",
+    id: "Async_SelectImplementation",
     component: Group,
-    entries: [
-      ...SelectImplementationProps({ element })
-    ]
+    entries: [...SelectImplementationProps({ element })],
   };
 
   if (group.entries.length) {
@@ -45,4 +38,4 @@ function SelectImplementationGroup(element) {
   return null;
 }
 
-AsyncPropertiesProvider.$inject = [ 'propertiesPanel', 'translate' ];
+AsyncPropertiesProvider.$inject = ["propertiesPanel", "translate"];
