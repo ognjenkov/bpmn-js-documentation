@@ -2,18 +2,16 @@ import { forEach } from "min-dash";
 
 import { getBusinessObject } from "bpmn-js/lib/util/ModelUtil";
 
-import { useEffect, useState } from "@bpmn-io/properties-panel/preact/hooks";
+// import { useEffect, useState } from "@bpmn-io/properties-panel/preact/hooks";
 
 import {
-  SelectEntry,
-  isSelectEntryEdited,
-  TextFieldEntry,
-  isTextFieldEntryEdited,
+  CheckboxEntry,
+  isCheckboxEntryEdited,
+  FeelTextAreaEntry,
+  isFeelTextAreaEntryEdited,
 } from "@bpmn-io/properties-panel";
 
 import { useService } from "bpmn-js-properties-panel";
-
-import { fetchOptions } from "../../service";
 
 import {
   createElement,
@@ -24,24 +22,25 @@ import {
 
 const EMPTY_OPTION = "";
 
-export function SelectImplementationProps(props) {
-  const { element } = props;
+export function OgnDocumentationProps(props) {
+  const { element } = props; // element je zapravo Shape
 
   if (!isSupported(element)) {
     return [];
   }
 
+  //potencijalni problem... kako da napravim ako nije edited, mozda odmah na mountu na element da ga napravim?
   const entries = [
     {
-      id: "async-type",
-      component: Type,
+      id: "documentation-checkbox",
+      component: CreateDocumentationCheckbox,
       isEdited: isSelectEntryEdited,
     },
   ];
 
   if (getImplementationType(element)) {
     entries.push({
-      id: "async-connection",
+      id: "documentation-feel",
       component: ConnectionKey,
       isEdited: isTextFieldEntryEdited,
     });
@@ -50,20 +49,12 @@ export function SelectImplementationProps(props) {
   return entries;
 }
 
-function Type(props) {
+function CreateDocumentationCheckbox(props) {
   const { element } = props;
 
   const bpmnFactory = useService("bpmnFactory");
   const commandStack = useService("commandStack");
   const translate = useService("translate");
-
-  const [fetchedOptions, setFetchedOptions] = useState([]);
-
-  // retrieve our available options via async service call
-  useEffect(async () => {
-    const response = await fetchOptions();
-    setFetchedOptions(response);
-  }, []);
 
   const getValue = () => {
     const type = getImplementationType(element);
@@ -73,7 +64,6 @@ function Type(props) {
 
   // initiate complex diagram updates via `commandStack`
   const setValue = (value) => {
-    console.log("select set value (value)", value);
     const commands = [];
 
     const businessObject = getBusinessObject(element);
@@ -162,6 +152,7 @@ function Type(props) {
 }
 
 function ConnectionKey(props) {
+  // OVAKO MU UPDEJTUJES PROPERTI, a preko funkcije type pravis element
   const { element } = props;
 
   const modeling = useService("modeling");
