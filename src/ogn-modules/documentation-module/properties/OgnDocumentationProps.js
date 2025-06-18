@@ -119,7 +119,8 @@ function Template(props) {
       documentationDefinition = createElement(
         "sistemiv:Documentation",
         {},
-        businessObject, // ja bih ovde stavio da mu je parent extensionElements? mozda neka greska?... a mozda onaj $parent u funkciji createElement ne radi nista zapravo?
+        // businessObject, // ja bih ovde stavio da mu je parent extensionElements? mozda neka greska?... a mozda onaj $parent u funkciji createElement ne radi nista zapravo?
+        extensionElements,
         bpmnFactory
       );
 
