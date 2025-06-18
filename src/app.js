@@ -6,9 +6,10 @@ import {
 } from "bpmn-js-properties-panel";
 
 import AsyncPropertiesProviderModule from "./provider";
+import OgnDocumentationModule from "./ogn-modules/documentation-module";
 
 import asyncModdleDescriptors from "./descriptors/async.json";
-
+import sistemivModdleDescriptors from "./descriptors/sistemiv.json";
 import diagramXML from "../resources/diagram.bpmn";
 
 import MyDebugModule from "./ogn-modules/debug-module";
@@ -23,9 +24,11 @@ const modeler = new BpmnModeler({
     BpmnPropertiesProviderModule,
     AsyncPropertiesProviderModule,
     MyDebugModule,
+    OgnDocumentationModule,
   ],
   moddleExtensions: {
     async: asyncModdleDescriptors,
+    sistemiv: sistemivModdleDescriptors, // u xml tagu <bpmn:definitions , ako je prisutan sistemiv element, dodaje se kljuc sistemiv -> xmlns:sistemiv="https://www.sistemiv.com"
   },
 });
 

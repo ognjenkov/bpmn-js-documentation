@@ -9,6 +9,11 @@ import {
   isSelectEntryEdited,
   TextFieldEntry,
   isTextFieldEntryEdited,
+  TextAreaEntry,
+  isTextAreaEntryEdited,
+  FeelTemplatingEntry,
+  FeelTextAreaEntry,
+  isFeelEntryEdited,
 } from "@bpmn-io/properties-panel";
 
 import { useService } from "bpmn-js-properties-panel";
@@ -43,7 +48,7 @@ export function SelectImplementationProps(props) {
     entries.push({
       id: "async-connection",
       component: ConnectionKey,
-      isEdited: isTextFieldEntryEdited,
+      isEdited: isTextAreaEntryEdited,
     });
   }
 
@@ -52,7 +57,6 @@ export function SelectImplementationProps(props) {
 
 function Type(props) {
   const { element } = props;
-
   const bpmnFactory = useService("bpmnFactory");
   const commandStack = useService("commandStack");
   const translate = useService("translate");
@@ -73,7 +77,6 @@ function Type(props) {
 
   // initiate complex diagram updates via `commandStack`
   const setValue = (value) => {
-    console.log("select set value (value)", value);
     const commands = [];
 
     const businessObject = getBusinessObject(element);
@@ -181,7 +184,7 @@ function ConnectionKey(props) {
     });
   };
 
-  return TextFieldEntry({
+  return TextAreaEntry({
     element,
     id: "async-connection",
     label: translate("Connection key"),

@@ -24,11 +24,12 @@ export default class DocumentationPropertiesProvider {
 }
 
 function OgnDocumentationGroup(element) {
+  // dobijamo element u Shape tipu
   const group = {
     label: "Ogn Documentation",
     id: "OgnDocumentation",
     component: Group, // ne znam sta postizu ovim, STA JE OVAJ KOD???
-    entries: [...OgnDocumentationProps({ element })], // u jednoj grupi moze vise entrija
+    entries: [...OgnDocumentationProps({ element })], // u jednoj grupi moze vise entrija, salje se element u Shape tipu
   };
 
   if (group.entries.length) {

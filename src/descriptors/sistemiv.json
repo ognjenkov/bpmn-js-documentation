@@ -1,0 +1,48 @@
+{
+  "$schema": "https://unpkg.com/moddle/resources/schema/moddle.json",
+  "name": "Sistemiv",
+  "prefix": "sistemiv",
+  "uri": "https://www.sistemiv.com",
+  "xml": {
+    "tagAlias": "lowerCase"
+  },
+  "associations": [],
+  "types": [
+    {
+      "name": "Documentation",
+      "superClass": [
+        "Element"
+      ],
+      "properties": [
+        {
+          "name": "template",
+          "type": "String",
+          "isAttr": true
+        },
+        {
+          "name": "markdown",
+          "type": "String",
+          "isBody": true
+        }
+      ]
+    },
+    {
+      "name": "RACI",
+      "superClass": [
+        "Element"
+      ],
+      "properties": [
+        {
+          "name": "responsible",
+          "type": "String",
+          "isAttr": true
+        },
+        {
+          "name": "rac",
+          "type": "String",
+          "isAttr": true
+        }
+      ]
+    }
+  ]
+}

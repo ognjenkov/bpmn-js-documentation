@@ -3,7 +3,7 @@ import { getBusinessObject, is } from "bpmn-js/lib/util/ModelUtil";
 export function createElement(elementType, properties, parent, factory) {
   const element = factory.create(elementType, properties);
   element.$parent = parent;
-  // console.log("createElement - element", element);
+  console.log("createElement - element", element);
   return element;
 }
 
@@ -13,6 +13,7 @@ export function getExtensionElementsList(businessObject, type = undefined) {
     (businessObject.get("extensionElements") &&
       businessObject.get("extensionElements").get("values")) ||
     [];
+
   // console.log("getExtensionElementsList - elements", elements);
   // console.log(
   //   "getExtensionElementsList - RETURN",
